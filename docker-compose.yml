@@ -1,5 +1,7 @@
 services:
   db:
+    networks:
+      - spring-mysql
     restart: unless-stopped
     image: mysql:8.0
     environment:
@@ -8,7 +10,7 @@ services:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "127.0.0.1:3307:3306"
+      - "3306"
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
@@ -17,6 +19,8 @@ services:
       retries: 5
 
   app:
+    networks:
+      - spring-mysql
     restart: unless-stopped
     build:
       context: .
@@ -35,3 +39,7 @@ services:
 
 volumes:
   db_data:
+
+networks:
+  spring-mysql:
+    driver: bridge
